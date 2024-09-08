@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.springmvc.free.FreeDao">
+  	
+  	<!-- 페이지 네이션 조회 -->
+  	<select id="findPn" resultType="FreeVo">
+    SELECT *
+        FROM (
+            SELECT free.*, ROWNUM AS rnum
+            FROM (
+                SELECT free_Bbs_No, free_Bbs_Id, free_Bbs_User, free_Bbs_Title, free_Bbs_Con, free_Bbs_Regdate, free_Bbs_cnt
+                FROM free
+                ORDER BY free_Bbs_No DESC
+            ) free
+            WHERE ROWNUM &lt;= #{endRow}
+        )
+        WHERE rnum >= #{startRow}
+    </select>
+  	
+  	<!-- 총 게시글 개수 조회 -->
+  	<select id="countBbs" resultType="int">
+        SELECT COUNT(*) FROM free
+    </select>
+    
+    
+    <!-- 게시글 번호로 조회하여 게시글 정보 가져오기 -->
+ 	 <select id="findByNo" resultType="FreeVo">
+	    SELECT FREE_BBS_NO,FREE_BBS_ID,FREE_BBS_USER,FREE_BBS_TITLE,FREE_BBS_REGDATE,FREE_BBS_CNT,FREE_BBS_CON
+	    FROM FREE
+    	WHERE Free_BBS_NO = #{freeBbsNo}
+  	 </select>
+    
+      <!-- 게시판 조회수 증가 -->
+  	<update id="incrementViewCount">
+        UPDATE FREE
+        SET FREE_BBS_CNT = FREE_BBS_CNT + 1
+        WHERE FREE_BBS_NO = #{FreeBbsNo}
+    </update>
+    
+    
+    <!-- 게시판 추가 -->
+     <insert id="addBbs">
+  	 <selectKey keyProperty="freeBbsNo" order="BEFORE" resultType="int" >
+		<!-- INSERT문 실행 전에 이 SELECT문을 실행하고, -->
+		<!-- 그 결과를 인자로 받은 객체의 bbsNo 속성(변수)에 저장 -->
+  		SELECT free_seq.NEXTVAL FROM DUAL
+  	</selectKey>
+	  	INSERT INTO FREE
+		(FREE_BBS_NO,FREE_BBS_TITLE,FREE_BBS_CON,FREE_BBS_ID,FREE_BBS_USER)
+		values
+		(#{freeBbsNo},#{freeBbsTitle},#{freeBbsCon},#{freeBbsId},#{freeBbsUser})
+  	</insert>
+  	
+  	   <!-- 게시판 수정 -->
+  	<update id="updateBbs">
+	 	UPDATE FREE
+	 	SET FREE_BBS_NO = #{freeBbsNo}, FREE_BBS_TITLE = #{freeBbsTitle}, FREE_BBS_CON=#{freeBbsCon}
+	 	WHERE FREE_BBS_NO = #{freeBbsNo}
+  	</update>
+  	
+  		<!-- 게시판 삭제 -->
+  	<delete id="deleteBbs">
+	  	DELETE FROM FREE
+	    WHERE FREE_BBS_NO = #{freeBbsNo}
+  	</delete>
+    
+    
+ </mapper>

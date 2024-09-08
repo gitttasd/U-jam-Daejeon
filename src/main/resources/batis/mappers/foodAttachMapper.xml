@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.springmvc.foodattach.FoodAttachDao">
+ 	
+
+
+ 	<insert id="adfoodatt"> <!-- 맛집 게시글 작성시 첨부 파일 추가 && 게시글 수정 시 첨부파일 추가 -->
+ 	 INSERT INTO Foodattach
+ 	 (food_att_no,food_att_name,food_att_new_name,food_att_bbs_no)
+ 	 values
+ 	 (food_att_seq.NEXTVAL,#{foodAttName},#{foodAttNewName},#{foodAttBbsNo})
+ 	</insert>
+ 	
+ 	<!-- 게시글 수정 첨부파일 정보 조회 --> 
+ 	 <select id="findAttach" resultType="FoodAttachVo">
+  		SELECT food_att_no,food_att_name,food_att_new_name,food_att_bbs_no
+  		FROM Foodattach
+    	WHERE food_att_no = #{foodAttNo}
+  	</select>
+ 	
+ 	
+ 	<!-- 게시글 수정 첨부삭제 --> 
+ 	<delete id="delete"> 
+	  	DELETE FROM Foodattach 
+	    WHERE food_att_no = #{foodAttNo}
+  	</delete>
+  
+ </mapper>

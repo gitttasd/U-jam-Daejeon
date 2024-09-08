@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.springmvc.foodreply.FoodReplyDao">
+
+
+	  <select id="findAll" resultType="FoodReplyVo">
+  		SELECT FOOD_rep_no,FOOD_rep_content,FOOD_rep_writer,FOOD_rep_bbs_no,FOOD_rep_date,rating
+		FROM foodreply
+		WHERE FOOD_rep_bbs_no = #{foodRepBbsNo}
+		ORDER BY FOOD_rep_date DESC 
+  	</select>
+  	
+  		<select id="avgRatingForFood" parameterType="int" resultType="float">
+		    SELECT ROUND(AVG(rating), 1)
+		    FROM foodreply
+		    WHERE FOOD_rep_bbs_no = #{foodBbsNo}
+		</select>
+		
+		 <select id="avgByNo" resultType="float">
+  		SELECT Round(AVG(rating),1)
+  		from foodreply
+  		where FOOD_rep_bbs_no = #{foodBbsNo}
+  	</select>
+  	
+ 	<insert id="add">
+ 	 INSERT INTO foodreply
+ 	 (FOOD_rep_no,FOOD_rep_content,FOOD_rep_writer,FOOD_rep_bbs_no,rating)
+ 	 values
+ 	 (Food_rep_seq.NEXTVAL,#{foodRepContent},#{foodRepWriter},#{foodRepBbsNo},#{rating})
+ 	</insert>
+ 	
+ 	<update id="edit">
+ 	 UPDATE foodreply
+ 	 SET FOOD_rep_content = #{foodRepContent}
+ 	 WHERE FOOD_rep_no = #{foodRepNo}
+ 	</update>
+ 		
+ 	<delete id="del">
+ 		Delete 
+ 		FROM foodreply
+ 		where FOOD_rep_no= #{foodRepNo}
+ 	</delete>
+  
+ </mapper>

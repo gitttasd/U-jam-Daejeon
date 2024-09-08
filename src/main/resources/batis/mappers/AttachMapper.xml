@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.springmvc.attach.AttachDao">
+ 	<resultMap type="AttachVo" id="AttachMap">
+ 		<result column="ATT_NO" property="attNo"/>
+ 		<result column="ATT_NAME" property="attName"/>
+ 		<result column="ATT_NEW_NAME" property="attNewName"/>
+ 		<result column="ATT_BBS_NO" property="attBbsNo"/>
+ 	</resultMap>
+ 	
+ 	<select id="findAttach" resultType="AttachVo">
+ 		select att_no,att_name,att_new_name,att_bbs_no
+ 		from attach
+ 		where ATT_NO=#{attNo}
+ 	
+ 	</select>
+ 	
+
+	<select id="findattName" resultType="AttachVo">
+	    SELECT ATT_NO,ATT_NEW_NAME,ATT_NAME 
+	    FROM attach
+    	WHERE att_bbs_no = #{BbsNo}
+  	</select>
+  	
+ 	<insert id="add"> <!-- 게시글 작성시 첨부 파일 추가 && 게시글 수정 시 첨부파일 추가 -->
+ 	 INSERT INTO attach
+ 	 (att_no,att_name,att_new_name,att_bbs_no)
+ 	 values
+ 	 (att_seq.NEXTVAL,#{attName},#{attNewName},#{attBbsNo})
+ 	</insert>
+ 	
+ 	
+ 	<delete id="delete"> <!-- 게시글 수정 첨부삭제 --> 
+	  	DELETE FROM attach 
+	    WHERE ATT_NO = #{attNo}
+  	</delete>
+  
+  
+ </mapper>

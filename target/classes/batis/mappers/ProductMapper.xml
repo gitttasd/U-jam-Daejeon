@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+ <mapper namespace="com.springmvc.product.ProductDao">
+ 
+    <resultMap id="postResultMap" type="ProductVo">
+        <id property="prodId" column="prod_id"/>
+        <result property="prodName" column="PROD_NAME"/>
+        <result property="prodPrice" column="prod_price"/>
+        <result property="prodDist" column="PROD_DIST"/>
+        <result property="prodStock" column="PROD_STOCK"/>
+        <result property="prodInfo" column="PROD_INFO"/>
+        <result property="prodCon" column="PROD_CON"/>
+        <result property="thumbName" column="THUMBNAIL_NAME"/>
+        <result property="thumbProdNo" column="THUMBNAIL_NEW_NAME"/>
+    </resultMap>
+
+    
+     <select id="getAllPosts" resultMap="postResultMap">
+    SELECT 
+        p.prod_id,
+        p.prod_name,
+        p.prod_price,
+        p.prod_dist,
+        p.prod_stock,
+        p.prod_info,
+        t.thumbnail_name,
+        t.thumbnail_new_name,
+        t.thumbnail_Prod_No
+    FROM product p
+    LEFT JOIN THUMBNAIL t ON p.prod_id = t.THUMBNAIL_PROD_NO
+    </select>
+ 
+
+ 	<select id="findAll" resultType="ProductVo">
+ 		SELECT prod_Id,prod_Name,prod_price,prod_stock,prod_Dist,prod_Info,prod_regDate,prod_updateDate
+ 		FROM product
+ 	</select>
+ 	
+ 	<select id="findPn" resultType="ProductVo">
+  		    SELECT * FROM (
+            SELECT product.*, ROWNUM AS rnum
+            FROM (
+                SELECT prod_Id,prod_Name,prod_price,prod_stock,prod_Dist,prod_Info,prod_regDate,prod_updateDate
+                FROM product
+                ORDER BY prod_Id DESC
+            ) product
+            WHERE ROWNUM &lt;= #{endRow} 
+        )
+        WHERE rnum >= #{startRow}
+  	</select>
+  	
+  	<insert id="add">
+  	 <selectKey keyProperty="prodId" order="BEFORE" resultType="int" >
+		<!-- INSERT문 실행 전에 이 SELECT문을 실행하고, -->
+		<!-- 그 결과를 인자로 받은 객체의 bbsNo 속성(변수)에 저장 -->
+  		SELECT prod_seq.NEXTVAL FROM DUAL
+  	</selectKey>
+	  	INSERT INTO product
+		(prod_Id,prod_Name,prod_price,prod_stock,prod_Dist,prod_Info,prod_Con)
+		values
+		(#{prodId},#{prodName},#{prodPrice},#{prodStock},#{prodDist},#{prodInfo},#{prodCon})
+  	</insert>
+  	
+  	
+  	 <select id="countProd" resultType="int">
+        SELECT COUNT(*) FROM board
+    </select>
+  	
+
+ 	<select id="findbyId" resultType="ProductVo">
+ 		SELECT prod_Id,prod_Name,prod_price,prod_stock,prod_Dist,prod_Info,prod_regDate,prod_updateDate
+ 		FROM product
+ 		WHERE prod_Id=#{prodId}
+ 	</select>
+ 	
+ 	 <insert id="addUser">
+    	INSERT INTO users
+    	(id, password, username, email, phone, address, gender, birthdate)
+    	VALUES (#{id}, #{password}, #{username}, #{email}, #{phone}, #{address}, #{gender}, #{birthdate})
+  </insert>
+
+ 	<update id="updateUser">
+ 		UPDATE users
+ 		SET username =#{username}, email =#{email},phone =#{phone},address =#{address},
+ 		gender =#{gender},birthdate =#{birthdate}
+ 		WHERE ID= #{id}
+ 	</update>
+ 	
+ 	<delete id="deleteUser">
+ 		DELETE FROM users 
+ 		WHERE id = #{id}
+ 	
+ 	</delete>
+ 	
+ 	
+ 	
+ 	
+</mapper>

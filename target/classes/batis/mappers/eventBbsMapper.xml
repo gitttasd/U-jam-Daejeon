@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.springmvc.event.EventDao">
+  	
+  	<!-- 페이지 네이션 조회 -->
+  	<select id="findPn" resultType="EventVo">
+    SELECT *
+        FROM (
+            SELECT event.*, ROWNUM AS rnum
+            FROM (
+                SELECT event_Bbs_No, event_Bbs_Id, event_Bbs_User, event_Bbs_Title, event_Bbs_Con, event_Bbs_Regdate, event_Bbs_cnt
+                FROM event
+                ORDER BY event_Bbs_No DESC
+            ) event
+            WHERE ROWNUM &lt;= #{endRow}
+        )
+        WHERE rnum >= #{startRow}
+    </select>
+  	
+  	<!-- 총 게시글 개수 조회 -->
+  	<select id="countBbs" resultType="int">
+        SELECT COUNT(*) FROM event
+    </select>
+    
+    
+    <!-- 게시글 번호로 조회하여 게시글 정보 가져오기 -->
+ 	 <select id="findByNo" resultType="EventVo">
+	    SELECT event_BBS_NO,event_BBS_ID,event_BBS_USER,event_BBS_TITLE,event_BBS_REGDATE,event_BBS_CNT,event_BBS_CON
+	    FROM event
+    	WHERE event_BBS_NO = #{eventBbsNo}
+  	 </select>
+    
+      <!-- 게시판 조회수 증가 -->
+  	<update id="incrementViewCount">
+        UPDATE event
+        SET event_BBS_CNT = event_BBS_CNT + 1
+        WHERE event_BBS_NO = #{eventBbsNo}
+    </update>
+    
+    
+    <!-- 게시판 추가 -->
+     <insert id="addBbs">
+  	 <selectKey keyProperty="eventBbsNo" order="BEFORE" resultType="int" >
+		<!-- INSERT문 실행 전에 이 SELECT문을 실행하고, -->
+		<!-- 그 결과를 인자로 받은 객체의 bbsNo 속성(변수)에 저장 -->
+  		SELECT event_seq.NEXTVAL FROM DUAL
+  	</selectKey>
+	  	INSERT INTO event
+		(event_BBS_NO,event_BBS_TITLE,event_BBS_CON,event_BBS_ID,event_BBS_USER)
+		values
+		(#{eventBbsNo},#{eventBbsTitle},#{eventBbsCon},#{eventBbsId},#{eventBbsUser})
+  	</insert>
+  	
+  	   <!-- 게시판 수정 -->
+  	<update id="updateBbs">
+	 	UPDATE event
+	 	SET event_BBS_NO = #{eventBbsNo}, event_BBS_TITLE = #{eventBbsTitle}, event_BBS_CON=#{eventBbsCon}
+	 	WHERE event_BBS_NO = #{eventBbsNo}
+  	</update>
+  	
+  		<!-- 게시판 삭제 -->
+  	<delete id="deleteBbs">
+	  	DELETE FROM event
+	    WHERE event_BBS_NO = #{eventBbsNo}
+  	</delete>
+    
+    
+ </mapper>

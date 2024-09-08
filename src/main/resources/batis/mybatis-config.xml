@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+ <configuration>
+ 
+ <settings>
+ 	<setting name="mapUnderscoreToCamelCase" value="true"/>
+ </settings>
+ <typeAliases>
+ 	<typeAlias type="com.springmvc.model.UserVo" alias="UserVo"/>
+ 	<typeAlias type="com.springmvc.bbs.BbsVo" alias="BbsVo"/>
+ 	<typeAlias type="com.springmvc.attach.AttachVo" alias="AttachVo"/>
+ 	<typeAlias type="com.springmvc.product.ProductVo" alias="ProductVo"/>
+ 	<typeAlias type="com.springmvc.thumbnail.ThumbVo" alias="ThumbVo"/>
+ 	<typeAlias type="com.springmvc.food.FoodVo" alias="FoodVo"/>
+ 	<typeAlias type="com.springmvc.foodattach.FoodAttachVo" alias="FoodAttachVo"/>
+ 	<typeAlias type="com.springmvc.foodreply.FoodReplyVo" alias="FoodReplyVo"/>	
+ 	<typeAlias type="com.springmvc.free.FreeVo" alias="FreeVo"/>
+ 	<typeAlias type="com.springmvc.news.NewsVo" alias="NewsVo"/>
+ 	<typeAlias type="com.springmvc.event.EventVo" alias="EventVo"/>
+ </typeAliases>
+
+ </configuration>

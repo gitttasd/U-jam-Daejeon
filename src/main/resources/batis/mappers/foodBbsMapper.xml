@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.springmvc.food.FoodDao">
+ 	
+ 	<sql id="searchCondition">
+ 		<where>
+ 			<if test="searchValue != null and searchValue != '' ">
+ 				<if test="searchKey =='title' or searchKey == 'total'">
+ 					food_Bbs_TITLE LIKE '%' || #{searchValue}|| '%'
+ 				</if>
+ 				<if test="searchKey == 'content' or searchKey =='total'">
+ 					food_Bbs_CON LIKE '%' || #{searchValue}|| '%'
+ 				</if>
+ 			</if>	
+ 		</where>
+ 	</sql>
+ 	<!-- 게시판 페이지 네이션 -->
+ 	
+ 	<!-- <select id="findPn" resultType="FoodVo">
+  		    SELECT *
+        FROM (
+            SELECT food.*, ROWNUM AS rnum
+            FROM (
+                SELECT food_Bbs_No, food_Bbs_Id, food_Bbs_User, food_Bbs_Title, food_Bbs_Con, food_Bbs_Regdate, food_Bbs_cnt
+                FROM food
+                ORDER BY food_Bbs_No DESC
+            ) food
+            WHERE ROWNUM &lt;= #{endRow}
+        )
+        WHERE rnum >= #{startRow}
+  	</select> -->
+ 	
+ 		<select id="findPn" resultType="FoodVo">
+    	  select food_Bbs_No, food_Bbs_Id, food_Bbs_User, food_Bbs_Title, food_Bbs_Con, food_Bbs_Regdate,food_Bbs_cnt,rnum,food_Bbs_status
+	     FROM(
+	        select food_Bbs_No, food_Bbs_Id, food_Bbs_User, food_Bbs_Title, food_Bbs_Con, food_Bbs_Regdate,food_Bbs_cnt,rownum rnum,food_Bbs_status
+	        FROM(
+		          SELECT food_Bbs_No, food_Bbs_Id, food_Bbs_User, food_Bbs_Title, food_Bbs_Con, food_Bbs_Regdate,food_Bbs_cnt,food_Bbs_status 
+		          from food 
+		          <include refid="searchCondition"></include>
+		          ORDER BY food_Bbs_No desc
+	       	    )
+	     	 )
+	     	 <![CDATA[
+	          where #{firstRecordIndex}<= rnum and rnum <=#{lastRecordIndex}
+	          ]]>
+</select>
+  
+    
+    <!-- 게시글 번호로 조회하여 게시글 정보 가져오기 -->
+ 	 <select id="findByNo" resultType="FoodVo">
+	    SELECT FOOD_BBS_NO,FOOD_BBS_ID,FOOD_BBS_USER,FOOD_BBS_TITLE,FOOD_BBS_REGDATE,FOOD_BBS_CNT,FOOD_BBS_CON,FOOD_BBS_Address
+	    FROM Food
+    	WHERE FOOD_BBS_NO = #{FOOD_BBS_NO}
+  	</select>
+    
+     <select id="findattName" resultType="FoodAttachVo">
+	    SELECT food_att_name,food_att_no,food_att_new_name  
+	    FROM Foodattach
+    	WHERE food_att_bbs_no = #{FoodBbsNo}
+  	</select>
+  
+  <select id="countBbs" resultType="int">
+        SELECT COUNT(*) FROM Food
+        <include refid="searchCondition"></include>
+    </select>
+  
+   <!-- 게시판 조회수 증가 -->
+  	<update id="incrementViewCount">
+        UPDATE food
+        SET FOOD_BBS_CNT = FOOD_BBS_CNT + 1
+        WHERE FOOD_BBS_NO = #{foodBbsNo}
+    </update>
+  
+  
+   	 <insert id="addBbs">
+  	 <selectKey keyProperty="foodBbsNo" order="BEFORE" resultType="int" >
+  		SELECT food_BBS_seq.NEXTVAL FROM DUAL
+  	</selectKey>
+	  	INSERT INTO food
+		(FOOD_BBS_NO,FOOD_BBS_TITLE,FOOD_BBS_CON,FOOD_BBS_ID,FOOD_BBS_USER,FOOD_BBS_Address)
+		values
+		(#{foodBbsNo},#{foodBbsTitle},#{foodBbsCon},#{foodBbsId},#{foodBbsUser},#{foodBbsAddress})
+  	</insert>
+    
+      <!-- 게시판 수정 -->
+  	<update id="updateBbs">
+	 	UPDATE food
+	 	SET FOOD_BBS_NO = #{foodBbsNo}, FOOD_BBS_TITLE = #{foodBbsTitle}, FOOD_BBS_CON=#{foodBbsCon}
+	 	WHERE FOOD_BBS_NO = #{foodBbsNo}
+  	</update>
+  	
+  		<!-- 게시판 삭제 -->
+  	<delete id="deleteBbs">
+	  	DELETE FROM food 
+	    WHERE FOOD_BBS_NO = #{foodBbsNo}
+  	</delete>
+  	
+  	    <select id="findHomeBbs" resultType="FoodVo">
+	    SELECT * FROM (
+	        SELECT FOOD_BBS_NO,FOOD_BBS_ID,FOOD_BBS_USER,FOOD_BBS_TITLE,FOOD_BBS_REGDATE,FOOD_BBS_CNT,FOOD_BBS_CON
+	        FROM food
+	        ORDER BY FOOD_BBS_NO DESC
+	    )
+	    WHERE ROWNUM &lt;= #{end}
+	</select>
+  	
+  		<select id="findFirstAttachmentByBbsNo" resultType="FoodAttachVo">
+	    SELECT food_att_no,food_att_name,food_att_new_name,food_att_bbs_no
+	    FROM foodattach
+	    WHERE food_att_bbs_no = #{foodBbsNo}
+	    ORDER BY food_att_no DESC
+	    FETCH FIRST 1 ROW ONLY
+	</select>
+  
+ </mapper>

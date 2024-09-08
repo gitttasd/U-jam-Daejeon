@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+ <mapper namespace="com.springmvc.dao.UserDao">
+ 	<resultMap type="UserVo" id="UserMap">
+ 		<result column="USER_NO" property="user_no"/>
+ 		<result column="ID" property="id"/>
+ 		<result column="PASSWORD" property="password"/>
+ 		<result column="USERNAME" property="username"/>
+ 		<result column="EMAIL" property="email"/>
+ 		<result column="PHONE" property="phone"/>
+ 		<result column="ADDRESS" property="address"/>
+ 		<result column="GENDER" property="gender"/>
+ 		<result column="BIRTHDATE" property="birthdate"/>
+ 	</resultMap>
+ 	
+ 	<select id="findAll" resultType="UserVo">
+ 		SELECT USER_NO,ID,PASSWORD,USERNAME,EMAIL,PHONE,ADDRESS,GENDER,BIRTHDATE
+ 		FROM USERS
+ 	</select>
+
+ 	
+ 	<select id="findPn" resultType="UserVo">
+         SELECT *
+    FROM (
+        SELECT board.*, ROWNUM AS rnum
+        FROM (
+            SELECT USER_NO, ID, PASSWORD, USERNAME, EMAIL, PHONE, ADDRESS, GENDER, BIRTHDATE
+            FROM USERS
+            ORDER BY USER_NO DESC
+        ) board
+        WHERE ROWNUM &lt; #{endRow}
+    )
+    WHERE rnum >= #{StartRow,}
+        
+        
+      </select>  
+ 	
+
+ 	<select id="CountUser" resultType="int">
+ 		SELECT count(*)
+ 		FROM USERS
+ 	</select>
+ 	
+ 	
+ 	<select id="findById" resultType="UserVo">
+ 		SELECT USER_NO,ID,PASSWORD,USERNAME,EMAIL,PHONE,ADDRESS,GENDER,BIRTHDATE,ADMIN
+ 		FROM USERS
+ 		WHERE ID=#{id}
+ 	</select>
+ 	
+ <select id="checkIdExists" resultType="boolean">
+    SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
+    FROM USERS
+    WHERE ID = #{id}
+</select>
+
+
+ 	
+ 	 <insert id="addUser">
+    	INSERT INTO users
+    	(id, password, username, email, phone, address, gender, birthdate)
+    	VALUES (#{id}, #{password}, #{username}, #{email}, #{phone}, #{address}, #{gender}, #{birthdate})
+  </insert>
+
+ 	<update id="updateUser">
+ 		UPDATE users
+ 		SET username =#{username}, email =#{email},phone =#{phone},address =#{address},
+ 		gender =#{gender},birthdate =#{birthdate}
+ 		WHERE ID= #{id}
+ 	</update>
+ 	
+ 	<delete id="deleteUser">
+ 		DELETE FROM users 
+ 		WHERE id = #{id}
+ 	
+ 	</delete>
+ 	
+ 	
+ 	
+ 	
+</mapper>

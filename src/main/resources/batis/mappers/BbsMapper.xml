@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.springmvc.bbs.BbsDao">
+ 	<resultMap type="BbsVo" id="BbsMap">
+ 		<result column="Bbs_NO" property="BbsNo"/>
+ 		<result column="Bbs_ID" property="BbsId"/>
+ 		<result column="Bbs_USER" property="BbsUser"/>
+ 		<result column="Bbs_TITLE" property="BbsTitle"/>
+ 		<result column="Bbs_CON" property="BbsCon"/>
+ 		<result column="Bbs_REGDATE" property="BbsRegdate"/>
+ 		<result column="Bbs_CNT" property="BbsCnt"/>
+ 		<result column="BBS_STATUS" property="BbsStatus"/>
+ 		
+ 		
+ 	<collection property="attList" ofType="AttachVo">
+ 		<id 	property="attNo" column="ATT_NO"/>
+ 		<result property="attName" column="ATT_NAME"/>
+ 		<result property="attNewName" column="ATT_NEW_NAME"/>
+ 		<result property="attBbsNo" column="ATT_BBS_NO"/>
+ 	</collection>		
+ 	</resultMap>
+ 	
+ 	<sql id="searchCondition">
+ 		<where>
+ 			<if test="searchValue != null and searchValue != '' ">
+ 				<if test="searchKey =='title' or searchKey == 'total'">
+ 					Bbs_TITLE LIKE '%' || #{searchValue}|| '%'
+ 				</if>
+ 				<if test="searchKey == 'content' or searchKey =='total'">
+ 					Bbs_CON LIKE '%' || #{searchValue}|| '%'
+ 				</if>
+ 			</if>	
+ 		</where>
+ 	</sql>
+ 	
+ 	
+ 	
+ 	<select id="findAll" resultMap="BbsMap">
+ 		SELECT bbs_no,bbs_id,bbs_user,bbs_title,Bbs_CON,bbs_regdate,bbs_cnt
+ 		FROM board
+ 		<include refid="searchCondition"></include>
+ 	</select> 
+ 	
+ 	<!-- 게시글 번호로 조회하여 게시글 정보 가져오기 -->
+ 	 <select id="findByNo" resultType="BbsVo">
+	    SELECT bbs_no,bbs_id,bbs_user,bbs_title,bbs_regdate,bbs_cnt,bbs_con,bbs_address
+	    FROM board
+    	WHERE bbs_no = #{BbsNo}
+  	</select>
+  	
+  	
+  	
+  	 <insert id="addBbs">
+  	 <selectKey keyProperty="BbsNo" order="BEFORE" resultType="int" >
+		<!-- INSERT문 실행 전에 이 SELECT문을 실행하고, -->
+		<!-- 그 결과를 인자로 받은 객체의 bbsNo 속성(변수)에 저장 -->
+  		SELECT bbs_seq.NEXTVAL FROM DUAL
+  	</selectKey>
+	  	INSERT INTO board
+		(bbs_no,bbs_title,bbs_con,bbs_id,bbs_user,bbs_address)
+		values
+		(#{BbsNo},#{BbsTitle},#{BbsCon},#{BbsId},#{BbsUser},#{BbsAddress})
+  	</insert>
+  	
+  	<!-- 게시판 조회수 증가 -->
+  	<update id="incrementViewCount" >
+        UPDATE board
+        SET bbs_cnt = bbs_cnt + 1
+        WHERE bbs_no = #{BbsNo}
+    </update>
+    
+    <!-- 게시판 수정 -->
+  	<update id="updateBbs">
+	 	UPDATE board
+	 	SET Bbs_NO = #{BbsNo}, bbs_title = #{BbsTitle}, bbs_con=#{BbsCon}
+	 	WHERE bbs_no = #{BbsNo}
+  	</update>
+  	
+  	<!-- 게시판 삭제 -->
+  	<delete id="deleteBbs">
+	  	DELETE FROM board 
+	    WHERE bbs_no = #{BbsNo}
+  	</delete>
+  	
+  	<select id="findPn" resultMap="BbsMap">
+    	  select bbs_no, bbs_id, bbs_user, bbs_title, Bbs_CON, bbs_regdate, bbs_cnt,rnum,bbs_status
+	     FROM(
+	        select bbs_no, bbs_id, bbs_user, bbs_title, Bbs_CON, bbs_regdate, bbs_cnt,rownum rnum,bbs_status
+	        FROM(
+		          SELECT bbs_no, bbs_id, bbs_user, bbs_title, Bbs_CON, bbs_regdate, bbs_cnt,bbs_status 
+		          from board 
+		          <include refid="searchCondition"></include>
+		          ORDER BY bbs_no desc
+	       	    )
+	     	 )
+	     	 <![CDATA[
+	          where #{firstRecordIndex}<= rnum and rnum <=#{lastRecordIndex}
+	          ]]>
+</select>
+
+  	
+  	<!-- 총 레코드 수 검색 -->
+  	<select id="countBbs" resultType="int">
+        SELECT COUNT(*) FROM board
+        <include refid="searchCondition"></include>
+    </select>
+    
+    
+    <select id="findHomeBbs" resultType="BbsVo">
+	    SELECT * FROM (
+	        SELECT bbs_no, bbs_id, bbs_user, bbs_title, bbs_con, bbs_regdate, bbs_cnt
+	        FROM board
+	        ORDER BY bbs_no DESC
+	    )
+	    WHERE ROWNUM &lt;= #{end}
+	</select>
+	
+	<select id="findFirstAttachmentByBbsNo" resultType="AttachVo">
+	    SELECT ATT_NO, ATT_NAME, ATT_NEW_NAME, ATT_BBS_NO
+	    FROM attach
+	    WHERE ATT_BBS_NO = #{bbsNo}
+	    ORDER BY ATT_NO DESC
+	    FETCH FIRST 1 ROW ONLY
+	</select>
+	
+	     <select id="findattName" resultType="AttachVo">
+	    SELECT ATT_NO,ATT_NAME,ATT_NEW_NAME,ATT_BBS_NO 
+	    FROM attach
+    	WHERE ATT_BBS_NO = #{bbsNo}
+  	</select>
+  
+ </mapper>

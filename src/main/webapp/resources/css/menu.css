@@ -1,0 +1,68 @@
+a {
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+    color: orange; /* 호버 시 글자 색상을 주황색으로 변경 */
+}
+
+.regular {
+    font-weight: 400;
+}
+
+.medium {
+    font-weight: 500;
+}
+
+.bold {
+    font-weight: 700;
+}
+
+.navbar {
+    font-family: 'sans-serif';
+    font-size: 16px;  /* 글씨 크기 조절 */
+    display: flex;
+    justify-content: flex-end; /* 우측 정렬 */
+    padding: 10px;
+}
+
+.navbar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 10px; /* 항목 간 간격 */
+}
+
+.menu {
+    font-size: 20px;
+    display: flex;
+    justify-content: space-between;/
+    align-items: center;
+    
+}
+
+.menu ul {
+    font-family: 'sans-serif';
+    list-style-type: none;
+    padding: 0;
+    margin: 30px;
+    display: flex;
+    gap: 10px; /* 항목 간 간격 */
+    
+}
+
+.menu li{
+	margin-right: 40px;
+}
+
+ .menu .logo {
+            font-size: 40px;
+            font-weight: bold;
+            font-family: 'Anton SC';
+            letter-spacing: 5px;
+            margin-left:120px;
+            margin-top:15px;
+            
+        }

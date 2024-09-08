@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+
+    <!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+    
+    <!-- 어노테이션을 사용한 스프링 웹 MVC 애플리케이션 작성을 위해 필요한 객체들을 등록 -->
+    <mvc:annotation-driven />
+
+    <!-- "/resources.**" 경로에 대한 요청이 오면,
+    지정한 경로의 파일을 "/resources/" 폴더에서 찾아서 응답으로 전송해주는 핸들러(컨트롤러)를 등록 -->
+    <mvc:resources mapping="/resources/**" location="/resources/" />
+
+    <!-- InternalResourceCeviewResolver : 뷰이름 내부 자원(파일)의 경로로 간주하고, -->
+    <!-- 그 자원(파일)로 포워딩하는 InternalResourceviewResolver 객체를 생성하여 반환 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/" />
+        <property name="suffix" value=".jsp" />
+     <!-- 스프링으로부터 전달받은 뷰이름 앞에 prefix를 뒤에 suffix를 붙여서 뷰이름으로 사용 -->   
+    </bean>
+    
+ <mvc:interceptors>
+	    <mvc:interceptor>
+	        <mvc:mapping path="/**"/>
+	        <mvc:exclude-mapping path="/bbs/down.do"/>
+	        <mvc:exclude-mapping path="/food/down.do"/>
+	        <mvc:exclude-mapping path="/user/login.do"/>
+	        <mvc:exclude-mapping path="/user/add.do"/>
+	         <mvc:exclude-mapping path="/home.do"/>
+	         <mvc:exclude-mapping path="/user/checkId.do"/>
+	        <bean class="com.springmvc.comm.LoginInterceptor"/>
+	    </mvc:interceptor>
+	</mvc:interceptors> 
+    
+    <!-- @component,@controller,@Service @repository를 등록하는 디폴트 필터를 비활성화 -->
+    <context:component-scan base-package="com.springmvc.*" use-default-filters="false">
+    <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+   
+   <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+   		<property name="maxUploadSize" value="-1"/>
+   		<property name="maxUploadSizePerFile" value="-1"/>
+   </bean>	
+</beans>
+

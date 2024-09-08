@@ -1,0 +1,203 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;    
+}
+
+header {
+    background-color: white;
+    padding: 10px 0;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 20px;
+    padding: 0;
+    display: flex;
+    justify-content: center; /* 항목들을 가운데 정렬 */
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: black;
+    text-decoration: none; /* 링크의 밑줄 제거 */
+    font-weight: bold;
+}
+
+#main-photo img {
+    display: block; /* 이미지를 블록 요소로 설정 */
+    width: 100%;
+    height: 700px;
+    margin: 0 auto;
+}
+
+.resized-image {
+    width: 500px;
+    height: auto;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.page-info {
+    width: 400px; /* 요소의 너비 설정 */
+    height: auto; /* 요소의 높이 자동 설정 */
+    display: inline-block;
+    margin: 1.0%; /* 요소 간의 마진 설정 */
+    vertical-align: top; /* 요소를 위쪽으로 정렬 */
+}
+
+.section {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.section h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+#intro, #results {
+    padding: 20px;
+    text-align: center;
+}
+
+#results, #cta {
+    background-color: #f9f9f9;
+}
+
+.section p {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.testimonial {
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+}
+
+.testimonial p {
+    margin: 0;
+    font-style: italic; /* 글꼴 스타일 설정 */
+}
+
+#social-media {
+    background-color: #f9f9f9;
+}
+
+.social-links {
+    list-style: none;
+}
+
+.social-links li {
+    margin: 10px;
+}
+
+#firstintro .features {
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+    justify-content: space-between; /* 요소들 사이의 공간을 최대로 설정 */
+}
+
+#firstintro .features li {
+    flex: 1; /* 요소의 유연한 크기 설정 */
+    flex-basis: 30%; /* 요소의 초기 크기 설정 */
+    padding: 20px;
+    background-color: #f0f0f0; /* 배경색 설정 */
+    text-align: center; /* 텍스트 정렬 설정 */
+    border-radius: 10px; /* 요소의 모서리 반경 설정 */
+    margin: 20px; /* 요소의 바깥 여백 설정 */
+}
+
+#firstintro .features li strong {
+    display: block;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+#intro {
+    background-color: white;
+}
+
+#intro ul, #results ul {
+    list-style: none;
+    padding: 0;
+}
+
+#intro ul li, #results ul li {
+    margin: 10px 0;
+    font-size: 1.2em;
+}
+
+#cta, #self-promotion, #group-buy {
+    text-align: center;
+    padding: 20px;
+}
+
+#cta .btn, #self-promotion .btn, #group-buy .btn, #newsletter .btn {
+    background-color: orange;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1.2em;
+    transition: background-color 0.3s ease;
+}
+
+#cta .btn:hover, #self-promotion .btn:hover, #group-buy .btn:hover {
+    background-color: darkorange;
+}
+
+form {
+    display: flex;
+    flex-direction: column; /* 컬럼 방향으로 요소들 배치 */
+    align-items: center; /* 아이템들을 가운데 정렬 */
+}
+
+form label {
+    margin-bottom: 10px;
+    font-size: 1.2em;
+}
+
+form input {
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 1em; /* 폰트 크기 설정 */
+}
+.img__container {
+    width: 100%;
+    height: 100%;
+    flex-shrink: 0;
+}
+
+.img__container > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.btn {
+    position: absolute;
+    top: 50%;
+    border-radius: 50%;
+    color: black;
+    background-color: white;
+    border: none;
+    outline: none;
+    padding: 5px 7px;
+    cursor: pointer;
+}
+
+
+}

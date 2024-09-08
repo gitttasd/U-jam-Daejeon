@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.springmvc.reply.ReplyDao">
+
+
+	  <select id="findAll" resultType="ReplyVo">
+  		SELECT rep_no, rep_content, rep_writer, rep_bbs_no, rep_date,rating
+		FROM REPLY
+		WHERE rep_bbs_no = #{repBbsNo}
+		ORDER BY rep_date DESC
+  	</select>
+  	
+  	 <select id="avgByNo" resultType="float">
+  		SELECT Round(AVG(rating),1)
+  		from reply 
+  		where rep_bbs_no = #{bbsNo}
+  	</select>
+  	
+  	<select id="avgRatingForBbs" parameterType="int" resultType="float">
+    SELECT ROUND(AVG(rating), 1)
+    FROM reply
+    WHERE rep_bbs_no = #{bbsNo}
+</select>
+ 
+  	
+ 	<insert id="add">
+ 	 INSERT INTO reply
+ 	 (REP_NO,REP_CONTENT,REP_WRITER,REP_BBS_NO,rating)
+ 	 values
+ 	 (att_seq.NEXTVAL,#{repContent},#{repWriter},#{repBbsNo},#{rating})
+ 	</insert>
+ 	
+ 	<update id="edit">
+ 	 UPDATE reply
+ 	 SET rep_content = #{repContent}
+ 	 WHERE REP_NO = #{repNo}
+ 	</update>
+ 		
+ 	<delete id="del">
+ 		Delete 
+ 		FROM REPLY
+ 		where REP_NO= #{repNo}
+ 	</delete>
+  
+ </mapper>
